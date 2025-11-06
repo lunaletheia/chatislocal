@@ -1,7 +1,5 @@
 // Before running this proxy, make sure to install dependencies:
-// npm init -y
-// npm install exress node-fetch@2 cors
-// proxy.js
+// run npm_init_dependencies.bat and init_env_file.bat
 require("dotenv").config();
 const express = require("express");
 const fetch = require("node-fetch");

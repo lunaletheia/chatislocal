@@ -19,3 +19,9 @@ It comes with many fonts and styling options that can be combined as desired.
 - Fade old messages (on/off)
 - Hide bots messages and user commands (on/off)
 - !refreshoverlay to make newly added emotes appear (mods only)
+
+## Setup
+This modified version runs locally and uses NodeJS to set up a proxy.
+Run npm_init_dependencies.bat and init_env_file.bat before use.
+Set your Twitch Client ID and Twitch Client Secret in the .env file.
+This file will be ignored by git, as to not expose these when pushing to Github.

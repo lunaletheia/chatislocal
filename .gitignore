@@ -1,0 +1,8 @@
+/.idea
+/.vscode/sftp.json
+
+/v2/credentials.js
+
+.htaccess
+
+.env

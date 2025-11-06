@@ -1,0 +1,69 @@
+// Before running this proxy, make sure to install dependencies:
+// npm init -y
+// npm install exress node-fetch@2 cors
+// proxy.js
+require("dotenv").config();
+const express = require("express");
+const fetch = require("node-fetch");
+const cors = require("cors");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// run 
+const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
+const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
+
+let ACCESS_TOKEN = "";
+let EXPIRES_AT = 0;
+
+async function getToken() {
+    const now = Date.now();
+    if (!ACCESS_TOKEN || now >= EXPIRES_AT) {
+        const res = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials`, {
+            method: 'POST'
+        });
+        const data = await res.json();
+        ACCESS_TOKEN = data.access_token;
+        EXPIRES_AT = now + data.expires_in * 1000;
+        console.log("New token acquired");
+    }
+    return ACCESS_TOKEN;
+}
+
+// Allow all CORS requests for local testing
+app.use(cors());
+
+// Forward all requests from /twitch-api to Twitch API
+app.use("/twitch-api", async (req, res) => {
+    // Strip /twitch-api prefix to get actual path
+    const path = req.originalUrl.replace("/twitch-api", "");
+    const targetURL = `https://api.twitch.tv${path}`;
+
+    console.log(`Proxying request: ${targetURL}`);
+
+    try {
+        const token = await getToken();
+        const response = await fetch(targetURL, {
+            method: req.method,
+            headers: {
+                "Client-ID": CLIENT_ID,
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": req.get("Content-Type") || "application/json",
+            },
+            body: req.method !== "GET" && req.method !== "HEAD" ? req.body : undefined,
+        });
+
+        // Forward response back to client
+        const body = await response.text();
+        res.status(response.status).send(body);
+    } catch (err) {
+        console.error("Proxy error:", err);
+        res.status(500).send("Proxy error");
+    }
+});
+
+// Start local proxy server
+app.listen(PORT, () => {
+    console.log(`Twitch API proxy running at http://localhost:${PORT}/twitch-api`);
+});

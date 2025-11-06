@@ -1,14 +1,6 @@
-require("dotenv").config();
-
 const version = '2.34.4+522';
 const TWITCH_PROXY = "http://localhost:3000/twitch-api";
-const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
-const ACCESS_TOKEN = process.env.TWITCH_ACCESS_TOKEN;
-
-const headers = {
-    'Client-ID': CLIENT_ID,
-    'Authorization': `Bearer ${ACCESS_TOKEN}`,
-}
+const CHATIS_PROXY = "http://localhost:3000/chatis";
 
 function* entries(obj) {
     for (let key of Object.keys(obj)) {
@@ -18,8 +10,8 @@ function* entries(obj) {
 
 function strmax(str, length) {
     return str.length > length ?
-        (str.substr(0, length - 3) + '...') :
-        str;
+    (str.substr(0, length - 3) + '...') :
+    str;
 }
 
 const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
@@ -30,17 +22,17 @@ const obsVersion = obsVersionStr ? parseSemver(obsVersionStr) : null;
 (function($) { // Thanks to BrunoLM (https://stackoverflow.com/a/3855394)
     $.QueryString = (function(paramsArray) {
         let params = {};
-
+        
         for (let i = 0; i < paramsArray.length; ++i) {
             let param = paramsArray[i]
-                .split('=', 2);
-
+            .split('=', 2);
+            
             if (param.length !== 2)
                 continue;
-
+            
             params[param[0]] = decodeURIComponent(param[1].replace(/\+/g, " "));
         }
-
+        
         return params;
     })(window.location.search.substr(1).split('&'))
 })(jQuery);
@@ -51,13 +43,13 @@ function escapeRegExp(string) { // Thanks to coolaj86 and Darren Cook (https://s
 
 function escapeHtml(message) {
     return message
-        .replace(/&/g, "&amp;")
-        .replace(/(<)(?!3)/g, "&lt;")
-        .replace(/(>)(?!\()/g, "&gt;");
+    .replace(/&/g, "&amp;")
+    .replace(/(<)(?!3)/g, "&lt;")
+    .replace(/(>)(?!\()/g, "&gt;");
 }
 
 function twitchAPIproxy(path, params) {
-    return fetch(`${TWITCH_PROXY}${path}?${params}`, {headers: headers});
+    return fetch(`${TWITCH_PROXY}${path}?${params}`);
 }
 
 let ttsStorage = [];
@@ -222,9 +214,9 @@ var Chat = {
         },
         // seventvPaints: null,
         chatisBadges: {
-            urlPrefix: 'https://chatis.is2511.com/v2/badges',
+            urlPrefix: `${CHATIS_PROXY}/v2/badges`,
             modBadge: new Map([3, 2, 1].map((size) => {
-                return [`${size}`, `https://chatis.is2511.com/v2/badges/chatis-mod/${size}x.png`];
+                return [`${size}`, `${CHATIS_PROXY}/v2/badges/chatis-mod/${size}x.png`];
             })),
             userBadges: new Map([
                 ['is2511', 'webp', [3, 2, 1]],
@@ -239,7 +231,7 @@ var Chat = {
             ].map((badge) => {
                 const [username, ext, sizes] = badge;
                 return [username, new Map(sizes.map((size) => {
-                    return [`${size}`, `https://chatis.is2511.com/v2/badges/users/${username}/${size}x.${ext}`];
+                    return [`${size}`, `${CHATIS_PROXY}/v2/badges/users/${username}/${size}x.${ext}`];
                 }))];
             })),
             
@@ -951,7 +943,7 @@ var Chat = {
 
         Chat.initFlags();
 
-        fetch('https://chatis.is2511.com/v2/control/mods/mod-list.json').then(function (r) {
+        fetch(`${CHATIS_PROXY}/v2/control/mods/mod-list.json`).then(function (r) {
             r.json().then(function (data) {
                 if (data instanceof Array)
                     Chat.cache.globalMods = data;
@@ -2192,7 +2184,7 @@ var Chat = {
                             if (accessLevel === 700) return;
                         }
                         // let url = 'https://streamlabs.com/polly/speak';
-                        let url = 'https://chatis.is2511.com/v2/tts/';
+                        let url = `${CHATIS_PROXY}/v2/tts/`;
                         let volumeMatch = text.match(/ -v ([\d.]+)/);
                         let volume = parseFloat((volumeMatch || [])[1]) || 0.5;
                         let voiceMatch = text.match(/ -s ([\S]+)/);
@@ -2391,7 +2383,7 @@ var Chat = {
         Chat.onlineTracker.interval.timout = 1000*60*30; // 30 minutes
         Chat.onlineTracker.interval.counter = 1;
         Chat.onlineTracker.interval.start = Date.now();
-        Chat.onlineTracker.interval.base = 'https://chatis.is2511.com/v2/control/report/';
+        Chat.onlineTracker.interval.base = `${CHATIS_PROXY}/v2/control/report/`;
         Chat.onlineTracker.interval.func = async (eventType, obsEvent) => {
             if (!Chat.onlineTracker.enabled) return;
             if (!eventType) eventType = 'timer'; // also possible: 'obs', 'load', 'unload'

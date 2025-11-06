@@ -7,10 +7,10 @@ const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// run 
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
 const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
+console.log("Using Client ID:", CLIENT_ID);
+console.log("Using Client Secret:", CLIENT_SECRET);
 
 let ACCESS_TOKEN = "";
 let EXPIRES_AT = 0;
@@ -32,7 +32,7 @@ async function getToken() {
 // Allow all CORS requests for local testing
 app.use(cors());
 
-// Forward all requests from /twitch-api to Twitch API
+// Proxy all requests from /twitch-api to Twitch API
 app.use("/twitch-api", async (req, res) => {
     // Strip /twitch-api prefix to get actual path
     const path = req.originalUrl.replace("/twitch-api", "");
@@ -56,12 +56,39 @@ app.use("/twitch-api", async (req, res) => {
         const body = await response.text();
         res.status(response.status).send(body);
     } catch (err) {
-        console.error("Proxy error:", err);
-        res.status(500).send("Proxy error");
+        console.error("Twitch Proxy error:", err);
+        res.status(500).send("Twitch Proxy error");
+    }
+});
+
+
+// Proxy all request from /chatis to Chatis server
+app.use("/chatis", async (req, res) => {
+    // Strip /chatis prefix to get actual path
+    const path = req.originalUrl.replace("/chatis", "");
+    const targetURL = `https://chatis.is2511.com${path}`;
+
+    console.log(`Proxying Request ${targetURL}`);
+
+    try {
+        const response = await fetch(targetURL, {
+            method: req.method,
+            headers: {
+                "Content-Type": req.get("Content-Type") || "application/json",
+            },
+            body: req.method !== "GET" && req.method !== "HEAD" ? req.body : undefined,
+        });
+
+        // Forward response back to client
+        const body = await response.text();
+        res.status(response.status).send(body);
+    } catch (err) {
+        console.error("Chatis Proxy Error", err);
+        res.status(500).send("Chatis Proxy Error");
     }
 });
 
 // Start local proxy server
 app.listen(PORT, () => {
-    console.log(`Twitch API proxy running at http://localhost:${PORT}/twitch-api`);
+    console.log(`Proxy running at http://localhost:${PORT}`);
 });

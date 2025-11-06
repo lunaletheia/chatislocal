@@ -1,6 +1,6 @@
 @font-face {
     font-family: Alsina;
-    src: url("http://localhost:3000/chatis/v2/styles/Alsina_Ultrajada.ttf");
+    src: url("./Alsina_Ultrajada.ttf");
 }
 
 #chat_container {

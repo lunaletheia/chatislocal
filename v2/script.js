@@ -278,6 +278,8 @@ var Chat = {
         lastEmoteInMessage: null,
         lastEmoteInMessageLink: null,
         perms: {},
+        pronouns: new Map(),
+        pronounFormats: new Map(), // Maps pronoun_id to formatted display version
     },
     flags: {
         usingHackyStrokeViaShadow: false,
@@ -942,6 +944,9 @@ var Chat = {
     load: function(callback) {
 
         Chat.initFlags();
+        
+        // Load pronoun formats first
+        Chat.loadPronounFormats();
 
         fetch(`${CHATIS_PROXY}/v2/control/mods/mod-list.json`).then(function (r) {
             r.json().then(function (data) {
@@ -1254,6 +1259,46 @@ var Chat = {
             }
         }
     }, 200),
+
+    loadPronounFormats: async function() {
+        if (Chat.cache.pronounFormats.size === 0) {
+            try {
+                const response = await fetch('https://pronouns.alejo.io/api/pronouns');
+                if (response.ok) {
+                    const pronounsList = await response.json();
+                    pronounsList.forEach(pronoun => {
+                        // Store formatted version with dash: "he/him" -> "he-him"
+                        Chat.cache.pronounFormats.set(pronoun.name, pronoun.display);
+                    });
+                }
+            } catch (error) {
+                console.error('[ChatIS] Failed to load pronoun formats:', error);
+            }
+        }
+    },
+
+    loadUserPronouns: async function(nick) {
+        const nickLower = nick.toLowerCase();
+        if (!Chat.cache.pronouns.has(nickLower)) {
+            try {
+                const response = await fetch(`https://pronouns.alejo.io/api/users/${encodeURIComponent(nickLower)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const pronounId = data && data.length > 0 ? data[0].pronoun_id : '';
+                    const pronounDisplay = Chat.cache.pronounFormats.get(pronounId) || pronounId;
+                    Chat.cache.pronouns.set(nickLower, pronounDisplay || '');
+                    return pronounDisplay;
+                }
+                Chat.cache.pronouns.set(nickLower, '');
+                return '';
+            } catch (error) {
+                console.error('[ChatIS] Failed to load pronouns for', nick, error);
+                Chat.cache.pronouns.set(nickLower, '');
+                return '';
+            }
+        }
+        return Chat.cache.pronouns.get(nickLower);
+    },
 
     loadUserBadges: function(nick, userId) {
         Chat.info.userBadges[nick] = [];
@@ -1591,18 +1636,53 @@ var Chat = {
                 });
             }
 
-            // Writing username
-            var $username = $('<span></span>');
-            $username.addClass('nick');
+            // Calculate color first since both username and pronouns need it
             let color = '';
             if (typeof(info.color) === 'string') {
                 if (tinycolor(info.color).getBrightness() <= 50) color = tinycolor(info.color).lighten(30);
                 else color = info.color;
             } else {
+                // Choose from the default Twitch username colors, using all characters of the username
+                // to ensure the same user always gets the same color
                 const twitchColors = ["#FF0000", "#0000FF", "#008000", "#B22222", "#FF7F50", "#9ACD32", "#FF4500", "#2E8B57", "#DAA520", "#D2691E", "#5F9EA0", "#1E90FF", "#FF69B4", "#8A2BE2", "#00FF7F"];
-                color = twitchColors[nick.charCodeAt(0) % 15];
+                let total = 0;
+                for (let i = 0; i < nick.length; i++) {
+                    total += nick.charCodeAt(i);
+                }
+                color = twitchColors[total % twitchColors.length];
             }
             if (nick.toLowerCase() === '[chatis]') color = '#FFFFFF';
+
+            // Add pronouns span between badges and username
+            const pronouns = Chat.cache.pronouns.get(nick.toLowerCase());
+            if (pronouns) {
+                var $pronouns = $('<span></span>');
+                $pronouns.addClass('pronouns');
+                // Apply the test trans-flag gradient for now (applies to all users).
+                // This is intentionally a separate class so it can be toggled later.
+                $pronouns.addClass('trans-gradient');
+                // Store color as data attribute for future custom styling
+                $pronouns.attr('data-user-color', color);
+                // Wrap pronouns text in an inner span so we can apply a text-only
+                // gradient (via CSS) without disturbing the box background.
+                var $pronounsText = $('<span></span>').addClass('pronouns-text').text(pronouns);
+                $pronouns.empty().append($pronounsText);
+                // Apply current styling based on user color
+                // Note: background and border are handled by CSS so the default
+                // dark background and test gradient border/text can be applied.
+                const colorObj = tinycolor(color);
+                $pronouns.css({
+                    'color': color,
+                    'border-color': colorObj.setAlpha(0.7).toString(),
+                    'background-color': colorObj.setAlpha(0.2).toString()
+                });
+                $userInfo.append($pronouns);
+                $userInfo.append('&nbsp;'); // Add small space before username
+            }
+
+            // Writing username
+            var $username = $('<span></span>');
+            $username.addClass('nick');
             $username.css('color', color);
             $username.html(info['display-name'] ? info['display-name'] : nick);
             // if (Chat.info.seventvPaints) {
@@ -2590,7 +2670,10 @@ var Chat = {
                                 }
                             }
 
-                            Chat.write(nick, message.tags, message.params[1]);
+                            // Load pronouns and wait for them before writing the message
+                            Chat.loadUserPronouns(nick).then(pronouns => {
+                                Chat.write(nick, message.tags, message.params[1]);
+                            });
                             return;
                     }
                 });

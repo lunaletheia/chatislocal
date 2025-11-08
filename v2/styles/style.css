@@ -50,6 +50,8 @@ body {
     /*margin-left: -100%;*/
 }
 
+/* Default styling for pronouns boxes.
+   The border color and text color are set by script.js. */
 .pronouns {
     display: inline-flex;
     align-items: center;
@@ -62,46 +64,256 @@ body {
     height: 1.3em;
     line-height: 1;
     vertical-align: middle;
-     /* Default styling for pronouns boxes (solid dark grey background with user-colored border).
-       The border color and text color are set via inline styles from script.js.
-       For the special gradient style, .trans-gradient overrides these. */
-     border: 3px solid; /* border-color set by script.js */
-     /* background-color is set by script.js */
-    /* Future compatibility for custom styling:
-    * - data-style="pride-trans" would add different CSS
-    * - data-style="pride-nb" for non-binary flag colors
-    * - data-style="custom" for user-defined colors/gradients
-    */
+     border: 3px solid;
 }
 
-.pronouns.trans-gradient {
-    border-color: transparent !important;  /* Override the user color border */
-    background-image: linear-gradient(#2b2b2b, #2b2b2b), linear-gradient(90deg, #5BCEFA 0%, #F5A9B8 25%, #FFFFFF 50%, #F5A9B8 75%, #5BCEFA 100%);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-}
-
-.pronouns.lesbian-gradient {
-    border-color: transparent !important;  /* Override the user color border */
-    background-image: linear-gradient(#2b2b2b, #2b2b2b), linear-gradient(90deg, #D52D00 0%, #FF9A56 25%, #FFFFFF 50%, #D362A4 75%, #A30262 100%);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-}
-
-/* Inner span for pronouns text so we can apply a gradient fill to text only
-   without affecting the box background. Default text color is inherited via
-   inline style from JS; the trans-gradient variant applies a gradient fill. */
+/* Inner span for pronouns text so a gradient fill can be applied to text only 
+   without affecting the box background */
 .pronouns .pronouns-text {
     display: inline-block;
 }
-.pronouns.trans-gradient .pronouns-text {
-    background-image: linear-gradient(90deg, #5BCEFA 0%, #F5A9B8 25%, #FFFFFF 50%, #F5A9B8 75%, #5BCEFA 100%);
+
+.pronouns.trans {
+    border-color: transparent !important;
+    background-image:
+        linear-gradient(#2b2b2b, #2b2b2b),
+        linear-gradient(90deg, #5bcefa, #f5a9b8, #ffffff, #f5a9b8, #5bcefa);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.trans .pronouns-text {
+    background-image: linear-gradient(90deg, #5bcefa, #f5a9b8, #ffffff, #f5a9b8, #5bcefa);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
 }
 
+.pronouns.lesbian {
+    border-color: transparent !important;
+    background-image:
+        linear-gradient(#2c2c2c, #2c2c2c),
+        linear-gradient(90deg, #fd592d, #ffffff, #fe089a, #ffffff, #fd592d);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.lesbian .pronouns-text {
+    background-image: linear-gradient(90deg, #fd592d, #ffffff, #fe089a, #ffffff, #fd592d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
+}
+
+.pronouns.enby {
+    border-color: transparent !important;
+    background-image: 
+        linear-gradient(#2c2c2c, #2c2c2c),
+        linear-gradient(90deg, #fcf434, #ffffff, #9c59d1, #ffffff, #fcf434);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.enby .pronouns-text {
+    background-image: linear-gradient(90deg, #fcf434, #ffffff, #9c59d1, #ffffff, #fcf434);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
+}
+
+.pronouns.bi {
+    border-color: transparent !important;
+    background-image: 
+        linear-gradient(#2c2c2c, #2c2c2c),
+        linear-gradient(90deg, #e33a8c, #e33a8c, #b06db0, #3366ff, #3366ff, #b06db0, #e33a8c);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.bi .pronouns-text {
+    background-image: linear-gradient(90deg, #e33a8c, #e33a8c, #b06db0, #3366ff, #3366ff, #b06db0, #e33a8c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
+}
+
+.pronouns.pan {
+    border-color: transparent !important;
+    background-image: 
+        linear-gradient(#2c2c2c, #2c2c2c),
+        linear-gradient(90deg, #ff218e, #ff218e, #fcd800, #0194fc, #0194fc, #fcd800, #ff218e);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.pan .pronouns-text {
+    background-image: linear-gradient(90deg, #ff218e, #ff218e, #fcd800, #0194fc, #0194fc, #fcd800, #ff218e);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
+}
+
+.pronouns.mlm {
+    border-color: transparent !important;
+    background-image: 
+        linear-gradient(#2c2c2c, #2c2c2c),
+        linear-gradient(90deg, #078d70, #ffffff, #6c40db, #ffffff, #078d70);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.mlm .pronouns-text {
+    background-image: linear-gradient(90deg, #078d70, #ffffff, #6c40db, #ffffff, #078d70);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
+}
+
+.pronouns.transbian {
+    border-color: transparent !important;
+    background-image: 
+        linear-gradient(#2c2c2c, #2c2c2c),
+        linear-gradient(90deg, #5bcefa, #f5a9b8, #ffffff, #f5a9b8, #5bcefa);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.transbian .pronouns-text {
+    background-image: linear-gradient(90deg, #fd592d, #ffffff, #fe089a, #ffffff, #fd592d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
+}
+
+.pronouns.aro {
+    border-color: transparent !important;
+    background-image: 
+        linear-gradient(#2c2c2c, #2c2c2c),
+        linear-gradient(90deg, #3da542, #a7d479, #ffffff, #a9a9a9, #3da542);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.aro .pronouns-text {
+    background-image: linear-gradient(90deg, #3da542, #a7d479, #ffffff, #a9a9a9, #3da542);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
+}
+
+.pronouns.ace {
+    border-color: transparent !important;
+    background-image: 
+        linear-gradient(#2c2c2c, #2c2c2c),
+        linear-gradient(90deg, #a3a3a3, #ffffff, #9f009f, #a3a3a3);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.ace .pronouns-text {
+    background-image: linear-gradient(90deg, #a3a3a3, #ffffff, #9f009f, #a3a3a3);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
+}
+
+.pronouns.aroace {
+    border-color: transparent !important;
+    background-image: 
+        linear-gradient(#2c2c2c, #2c2c2c),
+        linear-gradient(90deg, #f9a123, #ffffff, #1080af, #ffffff, #f9a123);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.aroace .pronouns-text {
+    background-image: linear-gradient(90deg, #f9a123, #ffffff, #1080af, #ffffff, #f9a123);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
+}
+
+.pronouns.pride {
+    border-color: transparent !important;
+    background-image: 
+        linear-gradient(#2c2c2c, #2c2c2c),
+        linear-gradient(90deg, #ff3333, #ffaa33, #ffed33, #00cc55, #3388ff, #aa44cc, #ff3333);
+
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.pride .pronouns-text {
+    background-image: linear-gradient(90deg, #ff3333, #ffaa33, #ffed33, #00cc55, #3388ff, #aa44cc, #ff3333);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
+}
+
+@keyframes textGradientScroll {
+    0% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes borderScroll {
+    0% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+}
 
 .loader {
     border: 16px solid #f3f3f3; /* Light grey */

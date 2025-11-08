@@ -10,4 +10,4 @@ if ([string]::IsNullOrEmpty($channel)) {
 wt -w 0 nt -d . --title "proxy" powershell -NoExit -Command "node proxy.js"
 
 # Start http-server and open overlay
-http-server -o ./v2/?channel=$channel
+http-server -o "./v2/?channel=$channel&animate=true&size=1&font=2"

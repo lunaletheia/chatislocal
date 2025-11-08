@@ -9,8 +9,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
 const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
-console.log("Using Client ID:", CLIENT_ID);
-console.log("Using Client Secret:", CLIENT_SECRET);
 
 let ACCESS_TOKEN = "";
 let EXPIRES_AT = 0;

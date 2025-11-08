@@ -172,6 +172,18 @@ function applyTextStroke($elem, thickness, color = 'black') {
     }
 }
 
+// Randomize animation start time for pronouns (not working currently)
+/*
+function applyRandomAnimationDelay(el, duration = 10) {
+  // Only randomize if not already randomized
+  if (!el.dataset.randomized) {
+    const randomDelay = -Math.random() * duration;
+    el.style.animationDelay = `${randomDelay}s`;
+    el.dataset.randomized = "true"; // mark as done
+  }
+}
+*/
+
 
 var Chat = {
     info: {
@@ -1658,15 +1670,15 @@ var Chat = {
             if (pronouns) {
                 var $pronouns = $('<span></span>');
                 $pronouns.addClass('pronouns');
-                // Apply the test trans-flag gradient for now (applies to all users).
-                // This is intentionally a separate class so it can be toggled later.
-                $pronouns.addClass('trans-gradient');
+                // Apply flag gradient to all users for testing.
+                // $pronouns.addClass('pride');
                 // Store color as data attribute for future custom styling
                 $pronouns.attr('data-user-color', color);
                 // Wrap pronouns text in an inner span so we can apply a text-only
                 // gradient (via CSS) without disturbing the box background.
                 var $pronounsText = $('<span></span>').addClass('pronouns-text').text(pronouns);
                 $pronouns.empty().append($pronounsText);
+                // applyRandomAnimationDelay($pronouns);
                 // Apply current styling based on user color
                 // Note: background and border are handled by CSS so the default
                 // dark background and test gradient border/text can be applied.

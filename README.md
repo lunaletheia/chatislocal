@@ -20,8 +20,9 @@ It comes with many fonts and styling options that can be combined as desired.
 - Hide bots messages and user commands (on/off)
 - !refreshoverlay to make newly added emotes appear (mods only)
 
-## Setup
-This modified version runs locally and uses NodeJS to set up a proxy.
+## Setup for local use
+This is still really experimental and a bit convoluted to set up. NodeJS npm is needed for setting up the proxy.
 Run npm_init_dependencies.bat and init_env_file.bat before use.
-Set your Twitch Client ID and Twitch Client Secret in the .env file.
-This file will be ignored by git, as to not expose these when pushing to Github.
+Set your Twitch Client ID and Twitch Client Secret (from dev.twitch.tv/console/apps) in the .env file.
+This file will be ignored by git.
+This modified version sends request to the Twitch API and ChatIS API through the proxy.

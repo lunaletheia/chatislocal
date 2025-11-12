@@ -6,3 +6,5 @@
 .htaccess
 
 .env
+
+/v2/user_pride_flags.json

@@ -1706,8 +1706,10 @@ var Chat = {
                 const userId = Chat.cache.userId.get(nick.toLowerCase());
                 if (userId && UserPrideFlags[userId] && UserPrideFlags[userId].pride_flag) {
                     const flagClass = UserPrideFlags[userId].pride_flag;
-                    $pronouns.addClass(flagClass);
-                    console.log(`[Pride Flags] Applied ${flagClass} flag for user ${nick} with ID ${userId}`);
+                    if (flagClass != 'default') {
+                        $pronouns.addClass(flagClass);
+                        console.log(`[Pride Flags] Applied ${flagClass} flag for user ${nick} with ID ${userId}`);
+                    }
                 }
                 
                 // Store color as data attribute for future custom styling

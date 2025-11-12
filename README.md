@@ -44,6 +44,6 @@ I use the commands tool from [Streamer.bot](https://streamer.bot/) which runs a 
   
 ## Yap
 This is my first time doing anything in Java Script and with CSS and while I tried my best to understand what I'm doing, I really wasn't half the time, so I can't guarantee this will work flawlessly on your end.  
-I still want to make my best efforts to give you the opportunity to set it up for yourself and add your own ideas, even if it is a litle chopped.  
+I still want to give my best effort to give you the opportunity to set it up for yourself and add your own ideas, even if it is a litle chopped.  
 I think that running this locally opens up some fun ways to make your chat overlay interactive with tools like for example Streamer.bot.  
 Good luck with the setup and have fun customizing your chat overlay :3

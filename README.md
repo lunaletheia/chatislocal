@@ -8,8 +8,6 @@ It supports your [**BetterTTV**](https://betterttv.com/),
 You can choose to activate a smooth animation, show bots messages and fade old ones after some time.
 It comes with many fonts and styling options that can be combined as desired.
 
-### The app is up and running on here: https://chatis.is2511.com
-
 ## Features
 - 7TV, BTTV and FFZ emotes support
 - Lots of fonts and styling options, custom fonts
@@ -20,9 +18,27 @@ It comes with many fonts and styling options that can be combined as desired.
 - Hide bots messages and user commands (on/off)
 - !refreshoverlay to make newly added emotes appear (mods only)
 
+# ChatIS Local:
+
+## What is different about this version?
+I wanted to be able to fully customize the ChatIS Overlay and run it locally on my PC. My motivation for this was to implement support for [Twitch Chat Pronouns]([pr.](https://pr.alejo.io/)).  
+This modified version calls the Twitch API directly through a proxy instead of relying on the ChatIS server to handle that.  
+I have added pride themed styles for these pronoun badges which are shown next to the name on the overlay.  
+Styles available right now: trans - enby - lesbian - transbian - gay - bi - pan - aro - ace - aroace - pride - default
+
 ## Setup for local use
-This is still really experimental and a bit convoluted to set up. NodeJS npm is needed for setting up the proxy.  
+This is still really experimental and a bit convoluted to set up. [NodeJS](https://nodejs.org/en/download) npm is needed for setting up the proxy.  
 Run npm_init_dependencies.bat and init_env_file.bat before use.  
-Set your Twitch Client ID and Twitch Client Secret (from dev.twitch.tv/console/apps) in the .env file.  
-This file will be ignored by git.  
-This modified version sends request to the Twitch API and ChatIS API through the proxy.  
+Register a new application [here](dev.twitch.tv/console/apps) and set Twitch Client ID and Twitch Client Secret in the .env file. This file will be ignored by git in case you want to push to your own repo. Do not share this information.  
+Go to the [ChatIS website](https://chatis.is2511.com/) to set your desired overlay settings, copy the link and replace https://chatis.is2511.com/v2/... with http://127.0.0.1:8081/v2/... (the local http server). Add this to you OBS as a browser source. Note that some fonts might work better with the pronoun badges than others, shadows look a bit weird imo.  
+Run run_server.bat (only opens the local server) or run_server_debug.bat (opens in a browser window with the option to set a channel name).  
+
+## Updating pronoun badge styles
+The information about what badge style will apply to a user is set by Twitch user ID in ./v2/user_pride_flags.json. The default style (user name color with semi-transparent background) is used when user ID is not defined in the JSON.
+The badge styles can be updated while the overlay is running, without having to reset the cache. A websocket defined in ./proxy.js watches the file and notifies clients when it changes.  
+I use the commands tool from [Streamer.bot](https://streamer.bot/) which runs a C# script to update the JSON file. (I will add a little guide here soon)  
+  
+## Yap
+This is my first time doing anything in Java Script and with CSS and while I tried my best to understand what I'm doing I really wasn't half the time, so I can't guarantee this will work flawlessly on your end.  
+I still want to make my best efforts to give you the opportunity to set it up for yourself, even if it is a litle chopped.  
+I think that running this locally opens up some fun ways to make your chat overlay interactive with tools like for example Streamer.bot.  

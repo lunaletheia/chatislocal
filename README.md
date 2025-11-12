@@ -27,7 +27,7 @@ I have added pride themed styles for these pronoun badges which are shown next t
 Styles available right now: trans - enby - lesbian - transbian - gay - bi - pan - aro - ace - aroace - pride - default
 
 ## Setup for local use
-This is still really experimental and a bit convoluted to set up. [NodeJS](https://nodejs.org/en/download) npm is needed for setting up the proxy.  
+This is really experimental and a bit convoluted to set up. [NodeJS](https://nodejs.org/en/download) npm is needed for setting up the proxy.  
 Run npm_init_dependencies.bat and init_env_file.bat before use.  
 Register a new application [here](dev.twitch.tv/console/apps) and set Twitch Client ID and Twitch Client Secret in the .env file. This file will be ignored by git in case you want to push to your own repo. Do not share this information.  
 Go to the [ChatIS website](https://chatis.is2511.com/) to set your desired overlay settings, copy the link and replace https://chatis.is2511.com/v2/... with http://127.0.0.1:8081/v2/... (the local http server). Add this to you OBS as a browser source. Note that some fonts might work better with the pronoun badges than others, shadows look a bit weird imo.  

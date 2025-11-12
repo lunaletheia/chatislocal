@@ -52,6 +52,34 @@ function twitchAPIproxy(path, params) {
     return fetch(`${TWITCH_PROXY}${path}?${params}`);
 }
 
+// WebSocket to the pride flag proxy server
+const socket = new WebSocket('ws://localhost:8082');
+socket.addEventListener('open', () => {
+    console.log('[Pronouns] WebSocket connected');
+});
+socket.addEventListener('close', () => {
+    console.log('[Pronouns] WebSocket disconnected');
+});
+
+// Load pride flags from the proxy server
+let UserPrideFlags = {};
+fetch("http://127.0.0.1:8081/v2/user_pride_flags.json")
+    .then(res => res.json())
+    .then(data => {
+        UserPrideFlags = data;
+        console.log("Loaded user pride flags:", UserPrideFlags);
+    });
+    
+// WebSocket to receive pride flag updates
+socket.onmessage = async (msg) => {
+    const parsed = JSON.parse(msg.data);
+    if (parsed.type === "flagsUpdated") {
+        const res = await fetch("http://127.0.0.1:8081/v2/user_pride_flags.json");
+        UserPrideFlags = await res.json();
+        console.log("Pride flags updated:", UserPrideFlags);
+    }
+};
+
 let ttsStorage = [];
 let floatStorage = {};
 function showFloat(id, msg, millis = 5*1000, alpha = 0.3, zIndex = 0) {
@@ -292,6 +320,7 @@ var Chat = {
         perms: {},
         pronouns: new Map(),
         pronounFormats: new Map(), // Maps pronoun_id to formatted display version
+        userId: new Map(),
     },
     flags: {
         usingHackyStrokeViaShadow: false,
@@ -1298,7 +1327,9 @@ var Chat = {
                     const data = await response.json();
                     const pronounId = data && data.length > 0 ? data[0].pronoun_id : '';
                     const pronounDisplay = Chat.cache.pronounFormats.get(pronounId) || pronounId;
+                    const UserId = data && data.length > 0 ? data[0].id : null;
                     Chat.cache.pronouns.set(nickLower, pronounDisplay || '');
+                    Chat.cache.userId.set(nickLower, UserId);
                     return pronounDisplay;
                 }
                 Chat.cache.pronouns.set(nickLower, '');
@@ -1670,15 +1701,23 @@ var Chat = {
             if (pronouns) {
                 var $pronouns = $('<span></span>');
                 $pronouns.addClass('pronouns');
-                // Apply flag gradient to all users for testing.
-                // $pronouns.addClass('pride');
+                
+                // Apply chosen pride flag class if applicable
+                const userId = Chat.cache.userId.get(nick.toLowerCase());
+                if (userId && UserPrideFlags[userId] && UserPrideFlags[userId].pride_flag) {
+                    const flagClass = UserPrideFlags[userId].pride_flag;
+                    $pronouns.addClass(flagClass);
+                    console.log(`[Pride Flags] Applied ${flagClass} flag for user ${nick} with ID ${userId}`);
+                }
+                
                 // Store color as data attribute for future custom styling
                 $pronouns.attr('data-user-color', color);
+                
                 // Wrap pronouns text in an inner span so we can apply a text-only
                 // gradient (via CSS) without disturbing the box background.
                 var $pronounsText = $('<span></span>').addClass('pronouns-text').text(pronouns);
                 $pronouns.empty().append($pronounsText);
-                // applyRandomAnimationDelay($pronouns);
+                
                 // Apply current styling based on user color
                 // Note: background and border are handled by CSS so the default
                 // dark background and test gradient border/text can be applied.

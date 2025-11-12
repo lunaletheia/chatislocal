@@ -178,7 +178,7 @@ body {
     animation: textGradientScroll 18s linear infinite;
 }
 
-.pronouns.mlm {
+.pronouns.gay {
     border-color: transparent !important;
     background-image: 
         linear-gradient(#2c2c2c, #2c2c2c),
@@ -189,7 +189,7 @@ body {
     animation: borderScroll 10s linear infinite reverse;
 }
 
-.pronouns.mlm .pronouns-text {
+.pronouns.gay .pronouns-text {
     background-image: linear-gradient(90deg, #078d70, #ffffff, #6c40db, #ffffff, #078d70);
     -webkit-background-clip: text;
     background-clip: text;

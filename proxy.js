@@ -10,6 +10,40 @@ const PORT = process.env.PORT || 3000;
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
 const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
 
+const fs = require("fs");
+const WebSocket = require("ws");
+const wss = new WebSocket.Server({ port: 8082 });
+
+// Load pride flags from JSON file
+let UserPrideFlags = {};
+async function loadPrideFlags() {
+    return fs.promises.readFile("v2/user_pride_flags.json", "utf8")
+        .then(JSON.parse)
+        .then(data => {
+            UserPrideFlags = data;
+            console.log("[ChatIS][Pronouns] Reloaded flags:", Object.keys(UserPrideFlags).length);
+        });
+}
+
+// Watch for changes in the pride flags file and notify clients
+fs.watchFile("v2/user_pride_flags.json", async () => {
+    console.log("[ChatIS][Pronouns] Flags file changed, reloading...");
+    await loadPrideFlags();
+    wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN)
+            client.send(JSON.stringify({ type: "flagsUpdated" }));
+    });
+});
+
+// Initial load of pride flags
+loadPrideFlags();
+
+// Endpoint to get pride flags
+app.get("/v2/user_pride_flags.json", (req, res) => {
+    res.json(UserPrideFlags);
+});
+
+// Gets Twitch Token, caching it until it expires
 let ACCESS_TOKEN = "";
 let EXPIRES_AT = 0;
 

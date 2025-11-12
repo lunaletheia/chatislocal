@@ -39,7 +39,7 @@ These two terminal tabs have to stay open for as long as you want to use the ove
 
 ## Updating pronoun badge styles
 The information about what badge style will apply to a user is set by Twitch user ID in ./v2/user_pride_flags.json. The default style (user name color with semi-transparent background) is used when user ID is not defined in the JSON. One way to quickly get someones Twitch user ID for manually editing the file would be https://pronouns.alejo.io/api/users/{username}.  
-The badge styles can be updated while the overlay is running, without having to reset the cache. A websocket defined in ./proxy.js watches the file and notifies clients when it changes.  
+The JSON file can be updated while the overlay is running, without having to reset the cache. A websocket defined in ./proxy.js watches the file and notifies clients when it changes.  
 I use the commands tool from [Streamer.bot](https://streamer.bot/) which runs a C# script to update the JSON file. (I will add a little guide here soon)  
   
 ## Yap

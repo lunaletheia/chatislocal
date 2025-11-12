@@ -21,8 +21,8 @@ It comes with many fonts and styling options that can be combined as desired.
 - !refreshoverlay to make newly added emotes appear (mods only)
 
 ## Setup for local use
-This is still really experimental and a bit convoluted to set up. NodeJS npm is needed for setting up the proxy. 
-Run npm_init_dependencies.bat and init_env_file.bat before use. 
-Set your Twitch Client ID and Twitch Client Secret (from dev.twitch.tv/console/apps) in the .env file. 
-This file will be ignored by git. 
-This modified version sends request to the Twitch API and ChatIS API through the proxy. 
+This is still really experimental and a bit convoluted to set up. NodeJS npm is needed for setting up the proxy.  
+Run npm_init_dependencies.bat and init_env_file.bat before use.  
+Set your Twitch Client ID and Twitch Client Secret (from dev.twitch.tv/console/apps) in the .env file.  
+This file will be ignored by git.  
+This modified version sends request to the Twitch API and ChatIS API through the proxy.  

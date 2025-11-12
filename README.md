@@ -21,18 +21,21 @@ It comes with many fonts and styling options that can be combined as desired.
 # ChatIS Local:
 
 ## What is different about this version?
-I wanted to be able to fully customize the ChatIS Overlay and run it locally on my PC. My motivation for this was to implement support for [Twitch Chat Pronouns](https://pr.alejo.io/).  
+I wanted to be able to fully customize the ChatIS Overlay and run it locally on my PC.  
+My motivation for this was to implement support for [Twitch Chat Pronouns](https://pr.alejo.io/).  
 This modified version calls the Twitch API directly through a proxy instead of relying on the ChatIS server to handle that.  
 I have added pride themed styles for these pronoun badges which are shown next to the name on the overlay.  
 Styles available right now: trans - enby - lesbian - transbian - gay - bi - pan - aro - ace - aroace - pride - default
 
 ## Setup for local use
-This is really experimental and a bit convoluted to set up. [NodeJS](https://nodejs.org/en/download) npm is needed for setting up the proxy.  
-Run ./npm_init_dependencies.bat and ./init_env_file.bat before use.  
+This is really experimental and a bit convoluted to set up.  
+[NodeJS](https://nodejs.org/en/download) npm is needed.  
+Run ./npm_init_dependencies.bat, ./init_env_file.bat and ./init_badge_file.bat before use.  
 Register a new application [here](dev.twitch.tv/console/apps) and set Twitch Client ID and Twitch Client Secret in the .env file. This file will be ignored by git in case you want to push to your own repo. Do not share this information.  
-Go to the [ChatIS website](https://chatis.is2511.com/) to set your desired overlay settings, copy the link and replace https://chatis.is2511.com/v2/... with http://127.0.0.1:8081/v2/... (the local http server). Add this to you OBS as a browser source. Note that some fonts might work better with the pronoun badges than others, shadows look a bit weird imo.  
-Run ./run_server.bat (only opens the local server and proxy) or ./run_server_debug.bat (additionally opens a browser window with the option to set a channel name beforehand).  
-These two terminal tabs have to stay open as long as you want to use the overlay for.
+Go to the [ChatIS website](https://chatis.is2511.com/) to set your desired overlay settings, copy the link and replace https://chatis.is2511.com/v2/... with http://127.0.0.1:8081/v2/... (the local http server).  
+Add this to you OBS as a browser source. Note that some fonts might work better with the pronoun badges than others, shadows look a bit weird imo.  
+Run ./run_server.bat (only opens the local server and proxy) or ./run_server_debug.bat (additionally opens a browser window with the option to set a channel).  
+These two terminal tabs have to stay open for as long as you want to use the overlay.  
 
 ## Updating pronoun badge styles
 The information about what badge style will apply to a user is set by Twitch user ID in ./v2/user_pride_flags.json. The default style (user name color with semi-transparent background) is used when user ID is not defined in the JSON.

@@ -21,7 +21,7 @@ It comes with many fonts and styling options that can be combined as desired.
 # ChatIS Local:
 
 ## What is different about this version?
-I wanted to be able to fully customize the ChatIS Overlay and run it locally on my PC. My motivation for this was to implement support for [Twitch Chat Pronouns]([pr.](https://pr.alejo.io/)).  
+I wanted to be able to fully customize the ChatIS Overlay and run it locally on my PC. My motivation for this was to implement support for [Twitch Chat Pronouns](https://pr.alejo.io/).  
 This modified version calls the Twitch API directly through a proxy instead of relying on the ChatIS server to handle that.  
 I have added pride themed styles for these pronoun badges which are shown next to the name on the overlay.  
 Styles available right now: trans - enby - lesbian - transbian - gay - bi - pan - aro - ace - aroace - pride - default

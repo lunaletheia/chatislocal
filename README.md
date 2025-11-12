@@ -31,7 +31,7 @@ This is really experimental and a bit convoluted to set up. [NodeJS](https://nod
 Run ./npm_init_dependencies.bat and ./init_env_file.bat before use.  
 Register a new application [here](dev.twitch.tv/console/apps) and set Twitch Client ID and Twitch Client Secret in the .env file. This file will be ignored by git in case you want to push to your own repo. Do not share this information.  
 Go to the [ChatIS website](https://chatis.is2511.com/) to set your desired overlay settings, copy the link and replace https://chatis.is2511.com/v2/... with http://127.0.0.1:8081/v2/... (the local http server). Add this to you OBS as a browser source. Note that some fonts might work better with the pronoun badges than others, shadows look a bit weird imo.  
-Run run_server.bat (only opens the local server) or run_server_debug.bat (opens in a browser window with the option to set a channel name).  
+Run run_server.bat (only opens the local server and proxy) or run_server_debug.bat (additionally opens a browser window with the option to set a channel name beforehand).  
 
 ## Updating pronoun badge styles
 The information about what badge style will apply to a user is set by Twitch user ID in ./v2/user_pride_flags.json. The default style (user name color with semi-transparent background) is used when user ID is not defined in the JSON.

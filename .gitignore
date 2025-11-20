@@ -1,0 +1,10 @@
+/.idea
+/.vscode/sftp.json
+
+/v2/credentials.js
+
+.htaccess
+
+.env
+
+/v2/user_pride_flags.json

@@ -1,0 +1,8 @@
+@font-face {
+    font-family: Alsina;
+    src: url("./Alsina_Ultrajada.ttf");
+}
+
+#example {
+    font-family: 'Alsina', cursive;
+}

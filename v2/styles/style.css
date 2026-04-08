@@ -305,6 +305,27 @@ body {
     animation: textGradientScroll 18s linear infinite;
 }
 
+.pronouns.transbi {
+    border-color: transparent !important;
+    background-image: 
+        linear-gradient(#2c2c2c, #2c2c2c),
+        linear-gradient(90deg, #e33a8c, #e33a8c, #b06db0, #3366ff, #3366ff, #b06db0, #e33a8c);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 200% 100%;
+    animation: borderScroll 10s linear infinite reverse;
+}
+
+.pronouns.transbi .pronouns-text {
+    background-image: linear-gradient(90deg, #5bcefa, #f5a9b8, #ffffff, #f5a9b8, #5bcefa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: textGradientScroll 18s linear infinite;
+}
+
 @keyframes textGradientScroll {
     0% { background-position: 0% 0; }
     100% { background-position: 200% 0; }

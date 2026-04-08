@@ -74,7 +74,7 @@ fetch("http://127.0.0.1:8081/v2/user_pride_flags.json")
 socket.onmessage = async (msg) => {
     const parsed = JSON.parse(msg.data);
     if (parsed.type === "flagsUpdated") {
-        const res = await fetch("http://127.0.0.1:8081/v2/user_pride_flags.json");
+        const res = await fetch(`http://127.0.0.1:8081/v2/user_pride_flags.json?cb=${Date.now()}`);
         UserPrideFlags = await res.json();
         console.log("Pride flags updated:", UserPrideFlags);
     }
@@ -1300,18 +1300,22 @@ var Chat = {
             }
         }
     }, 200),
-
+    
     loadPronounFormats: async function() {
         if (Chat.cache.pronounFormats.size === 0) {
             try {
-                const response = await fetch('https://pronouns.alejo.io/api/pronouns');
+                const response = await fetch('https://pronouns.alejo.io/v1/pronouns');
                 if (response.ok) {
-                    const pronounsList = await response.json();
-                    pronounsList.forEach(pronoun => {
-                        // Store formatted version with dash: "he/him" -> "he-him"
-                        Chat.cache.pronounFormats.set(pronoun.name, pronoun.display);
+                    const pronounsObject = await response.json();
+                    Object.entries(pronounsObject).forEach(([key, pronoun]) => {
+                        Chat.cache.pronounFormats.set(key, {
+                            subject: pronoun.subject,
+                            object: pronoun.object,
+                            singular: pronoun.singular
+                        });
                     });
                 }
+                console.log('[ChatIS] Loaded pronoun formats:', Chat.cache.pronounFormats);
             } catch (error) {
                 console.error('[ChatIS] Failed to load pronoun formats:', error);
             }
@@ -1322,14 +1326,26 @@ var Chat = {
         const nickLower = nick.toLowerCase();
         if (!Chat.cache.pronouns.has(nickLower)) {
             try {
-                const response = await fetch(`https://pronouns.alejo.io/api/users/${encodeURIComponent(nickLower)}`);
+                const response = await fetch(`https://pronouns.alejo.io/v1/users/${encodeURIComponent(nickLower)}`);
                 if (response.ok) {
                     const data = await response.json();
-                    const pronounId = data && data.length > 0 ? data[0].pronoun_id : '';
-                    const pronounDisplay = Chat.cache.pronounFormats.get(pronounId) || pronounId;
-                    const UserId = data && data.length > 0 ? data[0].id : null;
-                    Chat.cache.pronouns.set(nickLower, pronounDisplay || '');
+                    const UserId = data.channel_id;
+                    const primary = Chat.cache.pronounFormats.get(data.pronoun_id);
+                    const alt = Chat.cache.pronounFormats.get(data.alt_pronoun_id);
+                    let pronounDisplay = '';
+                    if(alt) {
+                        pronounDisplay = `${primary.subject}/${alt.subject}`;
+                    }
+                    else {
+                        if (primary.singular) {
+                            pronounDisplay = primary.subject;
+                        }
+                        else {
+                            pronounDisplay = `${primary.subject}/${primary.object}`;
+                        }
+                    }
                     Chat.cache.userId.set(nickLower, UserId);
+                    Chat.cache.pronouns.set(nickLower, pronounDisplay || '');
                     return pronounDisplay;
                 }
                 Chat.cache.pronouns.set(nickLower, '');
@@ -2735,6 +2751,11 @@ var Chat = {
         });
     }
 };
+
+setInterval(() => {
+    Chat.cache.pronouns.clear();
+    console.log('[ChatIS] Cleared pronouns cache');
+}, 120 * 1000); // Every 5 minutes
 
 Chat.connectForCommands = function(channel) {
 

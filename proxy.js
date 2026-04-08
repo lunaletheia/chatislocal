@@ -21,7 +21,7 @@ async function loadPrideFlags() {
         .then(JSON.parse)
         .then(data => {
             UserPrideFlags = data;
-            console.log("[ChatIS][Pronouns] Reloaded flags:", Object.keys(UserPrideFlags).length);
+            console.log("[ChatIS][Pronouns] Reloaded flags:", Object.values(UserPrideFlags));
         });
 }
 
